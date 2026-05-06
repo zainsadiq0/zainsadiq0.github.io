@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projects | Zain Sadiq</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --green: #39ff14;
+      --green-dim: #1a7a00;
+      --white: #f0f0f0;
+      --muted: #888888;
+      --border: #222222;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background-color: var(--bg);
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      color: var(--green);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 2rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--green);
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding: 5rem 3rem 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--green);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .page-header h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    /* PROJECTS */
+    .projects {
+      padding: 4rem 3rem 6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .project-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .project-card:last-child {
+      border-bottom: none;
+    }
+
+    .project-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    /* placeholder color block when no real image */
+    .project-img-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .project-img-placeholder span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .project-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .project-number {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--green);
+      letter-spacing: 0.2em;
+    }
+
+    .project-info h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.3;
+    }
+
+    .project-info p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .project-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .tool-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--white);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.7rem;
+      letter-spacing: 0.05em;
+    }
+
+    .project-link {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      text-decoration: none;
+      margin-top: 0.5rem;
+      border-bottom: 1px solid var(--green-dim);
+      padding-bottom: 2px;
+      transition: opacity 0.2s;
+    }
+
+    .project-link:hover {
+      opacity: 0.7;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    footer a {
+      color: var(--green);
+      text-decoration: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav {
+        padding: 1.2rem 1.5rem;
+      }
+      .page-header {
+        padding: 3rem 1.5rem 2rem;
+      }
+      .projects {
+        padding: 2rem 1.5rem 4rem;
+      }
+      .project-card {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      footer {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">ZS</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="projects.html" class="active">Projects</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <p class="page-tag">// Selected Work</p>
+    <h1>Projects</h1>
+  </header>
+
+  <section class="projects">
+
+    <!-- Project 1 -->
+    <div class="project-card">
+      <!-- Replace src with your actual image URL from Imgur -->
+      <div class="project-img-placeholder">
+        <span>[ Mars Habitat Image ]</span>
+      </div>
+      <div class="project-info">
+        <span class="project-number">01</span>
+        <h2>Mars Habitat Site Suitability Analysis</h2>
+        <p>
+          A planetary GIS analysis identifying optimal locations for a human habitat on Mars. 
+          Using MOLA DEM elevation data, slope analysis, and proximity modeling in ArcGIS Pro 
+          to evaluate and rank candidate sites based on terrain safety and resource proximity.
+        </p>
+        <div class="project-tools">
+          <span class="tool-tag">ArcGIS Pro</span>
+          <span class="tool-tag">MOLA DEM</span>
+          <span class="tool-tag">Spatial Analysis</span>
+          <span class="tool-tag">Remote Sensing</span>
+        </div>
+        <a href="https://github.com" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="project-card">
+      <div class="project-img-placeholder">
+        <span>[ NYC Housing Dashboard Image ]</span>
+      </div>
+      <div class="project-info">
+        <span class="project-number">02</span>
+        <h2>NYC Housing Price Disparity Dashboard</h2>
+        <p>
+          An interactive Tableau dashboard exploring housing price disparities across 
+          New York City neighborhoods. The visualization highlights racial and economic 
+          inequities embedded in the city's real estate market using public housing data.
+        </p>
+        <div class="project-tools">
+          <span class="tool-tag">Tableau</span>
+          <span class="tool-tag">Data Visualization</span>
+          <span class="tool-tag">Urban Analysis</span>
+        </div>
+        <a href="https://github.com" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="project-card">
+      <div class="project-img-placeholder">
+        <span>[ NYC NDVI Image ]</span>
+      </div>
+      <div class="project-info">
+        <span class="project-number">03</span>
+        <h2>NYC NDVI Vegetation Analysis</h2>
+        <p>
+          A remote sensing analysis of vegetation cover across New York City using 
+          NDVI (Normalized Difference Vegetation Index) derived from satellite imagery. 
+          Identifies green space distribution and vegetation density across boroughs.
+        </p>
+        <div class="project-tools">
+          <span class="tool-tag">Remote Sensing</span>
+          <span class="tool-tag">NDVI</span>
+          <span class="tool-tag">ArcGIS Pro</span>
+          <span class="tool-tag">Satellite Imagery</span>
+        </div>
+        <a href="https://github.com" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+    </div>
+
+  </section>
+
+  <footer>
+    <p>© 2025 Zain Sadiq</p>
+    <p><a href="https://github.com" target="_blank">GitHub</a></p>
+  </footer>
+
+</body>
+</html>
