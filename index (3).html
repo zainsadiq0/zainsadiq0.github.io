@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zain Sadiq — Geography &amp; Data Science</title>
+<meta name="description" content="Zain Sadiq — Geography and Data Science portfolio. GIS analysis, remote sensing, and cartography for environmental justice applications.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='none' stroke='%231A2A33' stroke-width='4'/%3E%3Ccircle cx='50' cy='50' r='28' fill='none' stroke='%231A2A33' stroke-width='3'/%3E%3Ccircle cx='50' cy='50' r='4' fill='%238C5A3C'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F5F0;
+    --paper-alt:#EDEAE1;
+    --ink:#1A2A33;
+    --ink-soft:#57666D;
+    --ink-faint:#8A9499;
+    --contour:#8C5A3C;
+    --hydro:#2E6E7A;
+    --grid-line:#D9D4C7;
+    --card:#FFFFFE;
+    --display:'Space Grotesk', sans-serif;
+    --body:'Inter', sans-serif;
+    --mono:'JetBrains Mono', monospace;
+    --max:1120px;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:inherit; text-decoration:none;}
+
+  img{max-width:100%; display:block;}
+
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 32px;}
+
+  /* ---------- Utility ---------- */
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.06em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .eyebrow .dot{width:5px; height:5px; border-radius:50%; background:var(--contour); flex-shrink:0;}
+
+  .section-title{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(28px, 4vw, 38px);
+    letter-spacing:-0.01em;
+    margin-top:10px;
+  }
+
+  .btn{
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:0.02em;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 20px;
+    border-radius:3px;
+    border:1px solid var(--ink);
+    background:var(--ink);
+    color:var(--paper);
+    transition:transform .15s ease, background .2s ease, color .2s ease;
+    cursor:pointer;
+  }
+  .btn:hover{background:var(--contour); border-color:var(--contour); transform:translateY(-1px);}
+  .btn.ghost{background:transparent; color:var(--ink); border-color:var(--ink);}
+  .btn.ghost:hover{background:var(--ink); color:var(--paper);}
+  .btn svg{width:14px; height:14px; flex-shrink:0;}
+
+  /* ---------- Nav ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(246,245,240,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--grid-line);
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:64px;
+  }
+  .mark{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:16px;
+    letter-spacing:0.01em;
+    display:flex; align-items:center; gap:9px;
+  }
+  .mark .compass{width:20px; height:20px; flex-shrink:0;}
+  .nav-links{
+    display:flex; gap:28px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--ink-soft);
+  }
+  .nav-links a{position:relative; padding-bottom:3px;}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-cta{display:flex; gap:10px;}
+  .nav-cta .btn{padding:8px 14px; font-size:12px;}
+
+  @media (max-width:820px){
+    .nav-links{display:none;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding:168px 0 96px;
+    overflow:hidden;
+    border-bottom:1px solid var(--grid-line);
+  }
+  .hero-bg{
+    position:absolute; inset:0;
+    z-index:0;
+    opacity:0.5;
+  }
+  .hero-bg svg{width:100%; height:100%;}
+  .contour-path{
+    fill:none;
+    stroke:var(--ink);
+    stroke-width:1;
+    opacity:0.09;
+  }
+  .contour-path.b{stroke:var(--contour); opacity:0.10;}
+  .contour-path.c{stroke:var(--hydro); opacity:0.10;}
+  .drift{animation:drift 60s linear infinite;}
+  @media (prefers-reduced-motion: reduce){
+    .drift{animation:none;}
+  }
+  @keyframes drift{
+    0%{transform:translateX(0);}
+    100%{transform:translateX(-120px);}
+  }
+
+  .hero-inner{position:relative; z-index:1;}
+  .hero-top-row{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:44px;
+    flex-wrap:wrap; gap:16px;
+  }
+  .hero h1{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(44px, 8vw, 84px);
+    letter-spacing:-0.02em;
+    line-height:0.98;
+  }
+  .hero .tagline{
+    font-family:var(--display);
+    font-weight:500;
+    font-size:clamp(16px, 2.2vw, 21px);
+    color:var(--hydro);
+    margin-top:14px;
+  }
+  .hero .summary{
+    max-width:560px;
+    color:var(--ink-soft);
+    font-size:15.5px;
+    margin-top:22px;
+  }
+  .hero-actions{
+    display:flex; gap:12px; margin-top:34px; flex-wrap:wrap;
+  }
+
+  /* ---------- About / skills ---------- */
+  .about{
+    padding:88px 0;
+    border-bottom:1px solid var(--grid-line);
+  }
+  .about-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:56px;
+    margin-top:34px;
+    align-items:start;
+  }
+  .about p{color:var(--ink-soft); font-size:15.5px; max-width:52ch;}
+  .skills-label{font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-faint); margin-bottom:14px;}
+  .skill-pills{display:flex; flex-wrap:wrap; gap:8px;}
+  .pill{
+    font-family:var(--mono);
+    font-size:12.5px;
+    padding:7px 12px;
+    border:1px solid var(--grid-line);
+    border-radius:3px;
+    background:var(--card);
+    color:var(--ink-soft);
+  }
+  @media (max-width:760px){
+    .about-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- Projects ---------- */
+  .projects{padding:88px 0; border-bottom:1px solid var(--grid-line);}
+  .projects-head{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;}
+  .projects-head p{color:var(--ink-soft); font-size:14.5px; max-width:38ch;}
+
+  .project-grid{
+    margin-top:48px;
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:22px;
+  }
+  @media (max-width:760px){
+    .project-grid{grid-template-columns:1fr;}
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--grid-line);
+    border-radius:4px;
+    padding:26px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    opacity:0;
+    transform:translateY(14px);
+    transition:opacity .6s ease, transform .6s ease, border-color .2s ease;
+  }
+  .card.visible{opacity:1; transform:translateY(0);}
+  .card:hover{border-color:var(--hydro);}
+
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;}
+  .geotag{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--contour);
+    letter-spacing:0.02em;
+    white-space:nowrap;
+  }
+  .card h3{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:19px;
+    letter-spacing:-0.005em;
+  }
+  .card .place{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--ink-faint);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+  }
+  .card .desc{color:var(--ink-soft); font-size:14px; flex-grow:1;}
+
+  .card .stat{
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--hydro);
+    border-top:1px dashed var(--grid-line);
+    padding-top:12px;
+  }
+
+  .tool-row{display:flex; flex-wrap:wrap; gap:6px;}
+  .tool-row span{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--ink-faint);
+    background:var(--paper-alt);
+    padding:4px 8px;
+    border-radius:2px;
+  }
+
+  .card-link{
+    font-family:var(--mono);
+    font-size:12.5px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    color:var(--ink);
+    margin-top:4px;
+  }
+  .card-link svg{width:12px; height:12px; transition:transform .15s ease;}
+  .card-link:hover svg{transform:translate(2px,-2px);}
+
+  /* ---------- Experience & Education ---------- */
+  .split{padding:88px 0; border-bottom:1px solid var(--grid-line);}
+  .split-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:64px;
+    margin-top:20px;
+  }
+  @media (max-width:820px){
+    .split-grid{grid-template-columns:1fr; gap:56px;}
+  }
+  .track{margin-top:30px;}
+  .entry{
+    display:grid;
+    grid-template-columns:120px 1fr;
+    gap:18px;
+    padding:18px 0;
+    border-top:1px solid var(--grid-line);
+  }
+  .entry:first-child{border-top:none; padding-top:0;}
+  .entry .when{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--ink-faint);
+    letter-spacing:0.02em;
+    padding-top:2px;
+  }
+  .entry h4{font-family:var(--display); font-size:16.5px; font-weight:600;}
+  .entry .org{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--hydro);
+    margin:2px 0 8px;
+  }
+  .entry ul{list-style:none;}
+  .entry li{
+    color:var(--ink-soft);
+    font-size:13.8px;
+    position:relative;
+    padding-left:14px;
+    margin-bottom:5px;
+  }
+  .entry li::before{
+    content:'—';
+    position:absolute; left:0; color:var(--ink-faint);
+  }
+  .entry .gpa{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink-faint);
+    margin-top:4px;
+  }
+
+  /* ---------- Footer / Contact ---------- */
+  footer{padding:88px 0 48px;}
+  .contact-inner{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    flex-wrap:wrap; gap:40px;
+  }
+  footer h2{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(30px, 5vw, 46px);
+    letter-spacing:-0.01em;
+    max-width:11ch;
+  }
+  .contact-links{display:flex; flex-direction:column; gap:14px; align-items:flex-start;}
+  .contact-links a{
+    font-family:var(--mono);
+    font-size:14.5px;
+    display:flex; align-items:center; gap:10px;
+    color:var(--ink-soft);
+    transition:color .15s ease;
+  }
+  .contact-links a:hover{color:var(--contour);}
+  .contact-links svg{width:15px; height:15px; flex-shrink:0; color:var(--hydro);}
+
+  .foot-bottom{
+    margin-top:80px;
+    padding-top:22px;
+    border-top:1px solid var(--grid-line);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--ink-faint);
+  }
+
+  :focus-visible{outline:2px solid var(--hydro); outline-offset:3px;}
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <a href="#top" class="mark">
+      <svg class="compass" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="50" cy="50" r="26" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="50" cy="50" r="4" fill="#8C5A3C"/></svg>
+      ZAIN SADIQ
+    </a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn ghost" href="Zain_Sadiq_Resume.pdf" target="_blank" rel="noopener">Résumé</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <svg viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+        <g class="drift">
+          <path class="contour-path" d="M-50,120 C150,80 300,180 500,140 S850,60 1050,120 S1350,180 1500,140" />
+          <path class="contour-path" d="M-50,180 C180,140 320,240 520,200 S870,120 1070,180 S1370,240 1520,200" />
+          <path class="contour-path b" d="M-50,260 C200,220 340,320 540,280 S890,200 1090,260 S1390,320 1540,280" />
+          <path class="contour-path" d="M-50,340 C220,300 360,400 560,360 S910,280 1110,340 S1410,400 1560,360" />
+          <path class="contour-path c" d="M-50,420 C240,380 380,480 580,440 S930,360 1130,420 S1430,480 1580,440" />
+          <path class="contour-path" d="M-50,500 C260,460 400,560 600,520 S950,440 1150,500 S1450,560 1600,520" />
+        </g>
+      </svg>
+    </div>
+
+    <div class="wrap hero-inner">
+      <div class="hero-top-row">
+        <span class="eyebrow"><span class="dot"></span>40.4862° N, 74.4518° W — New Brunswick, NJ</span>
+        <span class="eyebrow">Rutgers University — Class of 2027</span>
+      </div>
+
+      <h1>Zain Sadiq</h1>
+      <div class="tagline">Geography × Data Science — GIS Analysis &amp; Cartography</div>
+      <p class="summary">I turn satellite imagery and demographic data into maps and reports built for planners and policymakers — spatial analysis, remote sensing, and vulnerability modeling with an emphasis on environmental justice.</p>
+
+      <div class="hero-actions">
+        <a class="btn" href="Zain_Sadiq_Resume.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
+          Download Résumé
+        </a>
+        <a class="btn ghost" href="https://github.com/zainsadiq0" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          View GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="wrap">
+      <span class="eyebrow"><span class="dot"></span>About</span>
+      <div class="about-grid">
+        <p>Geography and data-focused undergraduate with hands-on experience editing, processing, and analyzing geospatial datasets in ArcGIS Pro and ERDAS IMAGINE. Skilled in land surface temperature derivation, multi-source spatial analysis, cartography, and vulnerability index construction — translating satellite imagery and demographic data into publication-quality maps, technical reports, and data visualizations, with a consistent focus on environmental justice applications.</p>
+        <div>
+          <div class="skills-label">Tools &amp; Skills</div>
+          <div class="skill-pills">
+            <span class="pill">ArcGIS Pro</span>
+            <span class="pill">ERDAS IMAGINE</span>
+            <span class="pill">Remote Sensing</span>
+            <span class="pill">Spatial Analysis</span>
+            <span class="pill">Cartography</span>
+            <span class="pill">Python</span>
+            <span class="pill">R Studio</span>
+            <span class="pill">Tableau</span>
+            <span class="pill">GIS Data Editing</span>
+            <span class="pill">Excel</span>
+            <span class="pill">Japanese — Fluent</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="projects" id="projects">
+    <div class="wrap">
+      <div class="projects-head">
+        <div>
+          <span class="eyebrow"><span class="dot"></span>Selected Work</span>
+          <h2 class="section-title">Projects</h2>
+        </div>
+        <p>Six case studies spanning remote sensing, vulnerability modeling, and spatial statistics — each geotagged to its study area.</p>
+      </div>
+
+      <div class="project-grid">
+
+        <!-- 1 Phoenix UHI -->
+        <div class="card">
+          <div class="card-top">
+            <div><div class="place">Maricopa County, AZ</div><h3>Urban Heat Island &amp; Vulnerability Analysis</h3></div>
+            <div class="geotag">33.4484°N<br>112.0740°W</div>
+          </div>
+          <p class="desc">Derived land surface temperature and NDVI from Landsat 9 imagery, then built a composite Heat Vulnerability Index — six physical and socioeconomic indicators combined through min-max normalization and weighted overlay — to map where heat exposure and social risk overlap.</p>
+          <div class="tool-row"><span>ArcGIS Pro</span><span>Landsat 9</span><span>Weighted Overlay</span></div>
+          <div class="stat">1,009 census tracts indexed · 5 publication-quality maps + technical report</div>
+          <a class="card-link" href="https://github.com/zainsadiq0/phoenix-uhi-analysis" target="_blank" rel="noopener">View Repository <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M7 7h10v10"/></svg></a>
+        </div>
+
+        <!-- 2 Miami Flood -->
+        <div class="card">
+          <div class="card-top">
+            <div><div class="place">Miami-Dade County, FL</div><h3>Compound Flood Risk &amp; Social Vulnerability</h3></div>
+            <div class="geotag">25.7617°N<br>80.1918°W</div>
+          </div>
+          <p class="desc">Integrated FEMA flood hazard layers, CDC Social Vulnerability Index scores, and USGS elevation data into a bivariate choropleth showing where flood exposure and social vulnerability compound one another across census tracts.</p>
+          <div class="tool-row"><span>ArcGIS Pro</span><span>Spatial Analyst</span><span>FEMA NFHL</span><span>CDC SVI</span></div>
+          <div class="stat">110 tracts at highest compound risk · concentrated along the coastal corridor</div>
+          <a class="card-link" href="https://github.com/zainsadiq0/gis-projects" target="_blank" rel="noopener">View Repository <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M7 7h10v10"/></svg></a>
+        </div>
+
+        <!-- 3 Mars -->
+        <div class="card">
+          <div class="card-top">
+            <div><div class="place">Jezero Crater, Mars</div><h3>Mars Slope &amp; Landing Site Analysis</h3></div>
+            <div class="geotag">18.4447°N<br>77.4508°E</div>
+          </div>
+          <p class="desc">Processed NASA MOLA elevation data into a slope-suitability model for Mars landing sites, mapping historical missions — Viking through Perseverance — against terrain constraints.</p>
+          <div class="tool-row"><span>ArcGIS Pro</span><span>MOLA DEM</span><span>Site Suitability</span></div>
+          <div class="stat">Six historical landing sites mapped against terrain slope</div>
+          <a class="card-link" href="https://github.com/zainsadiq0/gis-projects" target="_blank" rel="noopener">View Repository <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M7 7h10v10"/></svg></a>
+        </div>
+
+        <!-- 4 NYC NDVI -->
+        <div class="card">
+          <div class="card-top">
+            <div><div class="place">New York, NY</div><h3>NYC Vegetation Growth Analysis</h3></div>
+            <div class="geotag">40.7128°N<br>74.0060°W</div>
+          </div>
+          <p class="desc">Processed over a decade of Landsat imagery in ERDAS IMAGINE, extracting and reclassifying NDVI to track vegetation change across the city while correcting for atmospheric and sensor inconsistencies.</p>
+          <div class="tool-row"><span>ERDAS IMAGINE</span><span>Landsat</span><span>NDVI</span><span>Change Detection</span></div>
+          <div class="stat">2010 – 2024 · decade-long change detection</div>
+          <a class="card-link" href="https://github.com/zainsadiq0/remote-sensing-projects" target="_blank" rel="noopener">View Repository <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M7 7h10v10"/></svg></a>
+        </div>
+
+        <!-- 5 NYC Housing -->
+        <div class="card">
+          <div class="card-top">
+            <div><div class="place">New York, NY</div><h3>NYC Housing Price Disparities</h3></div>
+            <div class="geotag">40.7128°N<br>74.0060°W</div>
+          </div>
+          <p class="desc">Compiled and cleaned housing price data across all five boroughs into an interactive Tableau dashboard, pairing comparative charts with map-based visualizations of spatial price disparity.</p>
+          <div class="tool-row"><span>Tableau</span><span>Data Cleaning</span><span>Spatial Analysis</span></div>
+          <div class="stat">5 boroughs compared · dashboard + poster installation</div>
+          <a class="card-link" href="https://github.com/zainsadiq0/data_analysis" target="_blank" rel="noopener">View Repository <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M7 7h10v10"/></svg></a>
+        </div>
+
+        <!-- 6 Bayes -->
+        <div class="card">
+          <div class="card-top">
+            <div><div class="place">Statistical Analysis</div><h3>Bayes' Theorem — Loan Dataset</h3></div>
+            <div class="geotag">n = 614</div>
+          </div>
+          <p class="desc">Applied conditional probability and Bayes' theorem in R to a 614-observation loan dataset, examining how prior conditions shift the probability of default.</p>
+          <div class="tool-row"><span>R</span><span>Statistics</span><span>Conditional Probability</span></div>
+          <div class="stat">614 observations · full conditional probability workup</div>
+          <a class="card-link" href="https://github.com/zainsadiq0/data_analysis" target="_blank" rel="noopener">View Repository <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M7 7h10v10"/></svg></a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE + EDUCATION -->
+  <section class="split" id="experience">
+    <div class="wrap">
+      <div class="split-grid">
+
+        <div>
+          <span class="eyebrow"><span class="dot"></span>Experience</span>
+          <h2 class="section-title">Work</h2>
+          <div class="track">
+
+            <div class="entry">
+              <div class="when">May 2026 —<br>Present</div>
+              <div>
+                <h4>GIS Undergraduate Research Assistant</h4>
+                <div class="org">Rutgers University — Aresty Research Program</div>
+                <ul>
+                  <li>Editing, processing, and analyzing geospatial datasets to support volcano morphology research under faculty direction</li>
+                  <li>Maintaining spatial data layers in ArcGIS Pro and ERDAS IMAGINE across multi-source datasets</li>
+                  <li>Producing spatial analysis and visualizations in Tableau and Excel to communicate findings</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="entry">
+              <div class="when">May —<br>Jun 2026</div>
+              <div>
+                <h4>Outside Sales Intern</h4>
+                <div class="org">The Commencement Group</div>
+                <ul>
+                  <li>Conducted direct, face-to-face client outreach as part of a field-based sales team</li>
+                  <li>Tracked and maintained inventory records using Excel and Google Sheets</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div id="education">
+          <span class="eyebrow"><span class="dot"></span>Education</span>
+          <h2 class="section-title">Rutgers University</h2>
+          <div class="track">
+
+            <div class="entry">
+              <div class="when">2023 —<br>2027</div>
+              <div>
+                <h4>B.A. Information Technology &amp; Informatics</h4>
+                <div class="org">Data Track — New Brunswick</div>
+                <div class="gpa">GPA: 3.84</div>
+              </div>
+            </div>
+
+            <div class="entry">
+              <div class="when">2023 —<br>2027</div>
+              <div>
+                <h4>B.A. Geography</h4>
+                <div class="org">Technology Track — New Brunswick</div>
+                <div class="gpa">GPA: 3.42</div>
+              </div>
+            </div>
+
+            <div class="entry">
+              <div class="when">2023 —<br>2027</div>
+              <div>
+                <h4>Minor, Data Science</h4>
+                <div class="org">New Brunswick</div>
+                <div class="gpa">GPA: 3.61</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <footer id="contact">
+    <div class="wrap">
+      <div class="contact-inner">
+        <h2>Let's talk maps &amp; data.</h2>
+        <div class="contact-links">
+          <a href="mailto:zainsadiq1070@gmail.com">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg>
+            zainsadiq1070@gmail.com
+          </a>
+          <a href="tel:8482039784">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/></svg>
+            848-203-9784
+          </a>
+          <a href="https://linkedin.com/in/zain-sadiq-b047042a3" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4V8h4v1.5A6 6 0 0 1 16 8zM2 9h4v12H2zM4 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://github.com/zainsadiq0" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            github.com/zainsadiq0
+          </a>
+          <a href="Zain_Sadiq_Resume.pdf" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
+            Download Résumé (PDF)
+          </a>
+        </div>
+      </div>
+
+      <div class="foot-bottom">
+        <span>Zain Sadiq — New Brunswick, NJ · 40.4862°N, 74.4518°W</span>
+        <span>Rutgers University, Class of 2027</span>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  // Restrained scroll-reveal for project cards
+  const cards = document.querySelectorAll('.card');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i % 2 === 0 ? 0 : 90);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    cards.forEach(c => io.observe(c));
+  } else {
+    cards.forEach(c => c.classList.add('visible'));
+  }
+</script>
+
+</body>
+</html>
